@@ -1,0 +1,10 @@
+prefix=/usr/local/hdbextractor
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+
+Name: hdbextractor
+Description:  Extract data from hdb and hdb++ historical databases
+Version: 1.0.0
+Libs: -L${libdir} -lhdbextractor++-1.0.0
