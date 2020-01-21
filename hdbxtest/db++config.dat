@@ -5,11 +5,11 @@
 #
 #
 
-dbuser  = giacomo
+dbuser  = hdbppro
 	
-dbpass =
-dbhost = scw-dev
-dbname	=	hdbpp
+dbpass = hdbppro
+dbhost = srv-log-srf-02
+dbname	= hdbpp
 
 # The FillFromThePastMode configures how the lack of data in the desired time window is managed.
 # Possible values (if not specified, the default is None):

@@ -116,6 +116,8 @@ public:
 
     void setError(const char *error);
 
+    bool hasErrorDesc() const;
+
     time_t getTime_tTimestamp() const;
 
     struct timeval getTimevalTimestamp() const;
@@ -126,7 +128,7 @@ public:
 
     std::string toString(bool read = true, bool *ok = NULL) const;
 
-    std::vector<std::string> toStringVector() const;
+    std::vector<std::string> toStringVector(bool read = true) const;
 
     double *toDoubleP(bool read = true) const;
 

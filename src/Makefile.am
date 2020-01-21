@@ -32,6 +32,8 @@ libhdbextractor___la_SOURCES = hdbextractor.cpp \
     hdbextractorprivate.h \
     hdbxmacros.h \
     mysql/mysqlconnection.h \
+    mysql/mysqlutils.h \
+    mysql/mysqlutils.cpp \
     db/connection.h \
     db/dbschema.h \
     db/row.h \
@@ -71,6 +73,7 @@ db/connection.h \
 db/row.h \
 mysql/mysqlresult.h \
 mysql/mysqlrow.h \
+mysql/mysqlutils.h \
 db/result.h \
 db/xvariant.h \
 hdb/mysqlhdbschema.h \

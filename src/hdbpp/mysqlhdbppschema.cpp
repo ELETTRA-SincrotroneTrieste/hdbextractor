@@ -8,6 +8,7 @@
 #include "../db/row.h"
 #include "../db/result.h"
 #include "../mysql/mysqlconnection.h"
+#include "../mysql/mysqlutils.h"
 #include "../hdbxmacros.h"
 #include "../db/dbschemaprivate.h"
 #include "../db/helpers/configurabledbschemahelper.h"
@@ -91,26 +92,17 @@ MySqlHdbppSchema::~MySqlHdbppSchema()
 int MySqlHdbppSchema::get(std::vector<XVariant>& variantlist)
 {
     pthread_mutex_lock(&d_ptr->mutex);
-
     int size = -1;
     if(d_ptr->variantList != NULL)
     {
         size = (int) d_ptr->variantList->size();
-
-        printf("\e[0;35mMySqlHdbppSchema.get: locketh xvarlist for writing... size %d \e[0m\t", size);
-
-        for(int i = 0; i < size; i++)
-        {
-            //            printf("copying variant %d over %d\n", i, size);
+        for(int i = 0; i < size; i++) {
             variantlist.push_back(XVariant(*(d_ptr->variantList->get(i))));
-            //            printf("last timestamp %s\n", variantlist.at(variantlist.size() - 1).getTimestamp());
         }
         delete d_ptr->variantList;
         d_ptr->variantList = NULL;
     }
-
     pthread_mutex_unlock(&d_ptr->mutex);
-    // printf("\e[0;32munlocked: [copied %d]\e[0m\n", size);
     return size;
 }
 
@@ -171,15 +163,16 @@ bool MySqlHdbppSchema::mGetSourceProperties(const char* source,
              * ATT_STATE, DEVICE_STATE,
              * ATT_ENCODED, NO_DATA ...
              */
-            if(strstr(data_type, "double") != NULL)
+            if(strstr(data_type, "double") != NULL || strstr(data_type, "float") != NULL)
                 *type = XVariant::Double;
-            else if(strstr(data_type, "int64") != NULL)
-                *type = XVariant::Int;
-            else if(strstr(data_type, "int8") != NULL)
+            else if(strstr(data_type, "ulong") != NULL || strstr(data_type, "ushort") != NULL
+                     || strstr(data_type, "uchar") != NULL)
+                *type = XVariant::UInt;
+            else if(strstr(data_type, "long") != NULL || strstr(data_type, "short") != NULL)
                 *type = XVariant::Int;
             else if(strstr(data_type, "string") != NULL)
                 *type = XVariant::String;
-            else if(strstr(data_type, "bool") != NULL)
+            else if(strstr(data_type, "boolean") != NULL)
                 *type = XVariant::Boolean;
             else
                 *type = XVariant::TypeInvalid;
@@ -343,7 +336,6 @@ bool MySqlHdbppSchema::getData(const char *source,
 
                             if(notifyOnNewTimestamp)
                             {
-                                printf("\e[1;32monProgressUpdate percent %f src %s\e[0m\n", percent, source);
                                 percent = round((double) rowCnt / res->getRowCount() * myPercent  + (myPercent * sourceIndex));
                                 d_ptr->resultListenerI->onProgressUpdate(source, percent);
                                 notifyOnNewTimestamp = false;
@@ -446,7 +438,7 @@ bool MySqlHdbppSchema::getData(const char *source,
                                                      " AND data_time <= '%s' ORDER BY data_time ASC",
                                  column_value_w, table_name, id, start_date, stop_date);
 
-                    printf("\e[1;32mquery: %s\e[0m\n", query);
+             //       printf("MySqlHdbppSchema::getData: \e[1;32mquery: %s\e[0m\n", query);
 
                     res = connection->query(query);
                     if(!res)
@@ -601,6 +593,12 @@ bool MySqlHdbppSchema::getData(const char *source,
     return success && !d_ptr->isCancelled;
 }
 
+bool MySqlHdbppSchema::query(const char *query, Connection *connection,
+                             Result *&result,
+                             double *elapsed) {
+    return  MySqlUtils().query(query, connection, result, d_ptr->errorMessage, elapsed);
+}
+
 /** \brief Fetch attribute data from the MySql hdb++ database between a start and stop date/time.
  *
  * Fetch data from the  MySql hdb++ database.
@@ -645,7 +643,7 @@ bool MySqlHdbppSchema::getData(const std::vector<std::string> sources,
     {
         d_ptr->totalRowCnt = i + 1;
         perSourceElapsed = 0.0;
-        printf("MySqlHdbppSchema.getData %s %s %s\n", sources.at(i).c_str(), start_date, stop_date);
+//        printf("MySqlHdbppSchema.getData %s %s %s\n", sources.at(i).c_str(), start_date, stop_date);
         success = getData(sources.at(i).c_str(), start_date, stop_date,
                            connection, notifyEveryPercent, i, totalSources, &perSourceElapsed);
         elapsed += perSourceElapsed;
@@ -762,11 +760,12 @@ bool MySqlHdbppSchema::findErrors(const char *source, const TimeInterval *time_i
          * of data has data_time,quality and error. Moreover, in the case of spectrum data, the dim_x
          * is forced to the value 1 and so for each error in a given time, only one row is returned.
          */
-        snprintf(query, MAXQUERYLEN, "SELECT data_time,quality,att_error_desc_id FROM "
-                                     " %s WHERE att_conf_id=%d AND data_time >='%s' "
-                                     " AND data_time <= '%s' AND (quality = 1 OR error_desc IS NOT NULL)"
+        snprintf(query, MAXQUERYLEN, "SELECT data_time,quality,error_desc FROM "
+                                     " %s,att_error_desc WHERE att_conf_id=%d AND data_time >='%s'"
+                                     " AND data_time <= '%s' AND %s.att_error_desc_id IS NOT NULL"
+                                     " AND %s.att_error_desc_id=att_error_desc.att_error_desc_id"
                                      " ORDER BY data_time ASC",
-                 table_name, id, time_interval->start(), time_interval->stop());
+                 table_name, id, time_interval->start(), time_interval->stop(), table_name, table_name);
 
         pinfo("\e[1;32mquery %s\e[0m\n", query);
 

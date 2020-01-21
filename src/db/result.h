@@ -2,6 +2,8 @@
 #define RESULT_H
 
 #include "row.h"
+#include <vector>
+#include <string>
 
 /** \brief Defines an interface for a result of the database. <em>Used internally</em>.
  *
@@ -22,6 +24,8 @@ public:
     virtual Row* getCurrentRow() const = 0;
 
     virtual int getRowCount() = 0;
+
+    virtual std::vector<std::string> getColumnList() = 0;
 
     virtual int next() = 0;
 

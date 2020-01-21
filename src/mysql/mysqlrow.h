@@ -3,6 +3,8 @@
 
 #include <mysql/mysql.h>
 #include <row.h>
+#include <vector>
+#include <string>
 
 /** \brief An implementation of the Row interface dealing with mysql results. <em>Used internally</em>.
  *

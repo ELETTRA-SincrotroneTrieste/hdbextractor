@@ -7,11 +7,13 @@
 #include <vector>
 #include <string>
 #include <list>
+#include <map>
 
 class HdbExtractorPrivate;
 class HdbExtractorListener;
 class HdbXSettings;
 class TimeInterval;
+class Result;
 
 /** \mainpage The Hdbextractor++ historical database data extractor
  *
@@ -587,10 +589,17 @@ public:
      * @param passwd the password for that username
      * @param port the database server port (default 3306, thought for mysql)
      *
-     * Throws an exception upon failure.
+     * @return false upon failure, true otherwise
      */
     bool connect(DbType dbType, const char* host, const char *db, const char* user,
                  const char* passwd, unsigned short port = 3306);
+
+    /*!
+     * \brief connect with the parameters previously stored in HdbXSettings
+     *
+     * \return false upon failure, true otherwise
+     */
+    bool connect();
 
     /** \brief Disconnect the client from the database
      *
@@ -608,7 +617,11 @@ public:
 
     bool getData(const std::vector<std::string> sources, const TimeInterval *time_interval);
 
+    bool query(const char *query, Result* &result, double *elapsed = NULL);
+
     bool getSourcesList(std::list<std::string>& result) const;
+
+    bool findSources(const char* substring, std::list<std::string> &result) const;
 
     bool findErrors(const char *source, const TimeInterval *time_interval) const;
 

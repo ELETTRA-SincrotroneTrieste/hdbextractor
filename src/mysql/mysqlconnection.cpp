@@ -37,7 +37,6 @@ bool MySqlConnection::connect(const char* host,
 {
     mysql_init(&mMysql);
     mConnection = mysql_real_connect(&mMysql, host, user, passwd, db, port, 0, 0);
-    printf("\e[1;35m connection %p %s %s %s %s\e[0m\n", mConnection, host, user, passwd, db);
     return (mConnection != NULL);
 }
 

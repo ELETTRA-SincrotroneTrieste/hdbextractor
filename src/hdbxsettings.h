@@ -31,8 +31,13 @@ public:
 
     double getDouble(const char* key, bool *ok) const;
 
+    std::string getError() const;
+
+    bool hasError() const;
+
 private:
     std::map<std::string, std::string> mMap;
+    std::string m_errorStr;
 };
 
 #endif // QUERYCONFIGURATION_H

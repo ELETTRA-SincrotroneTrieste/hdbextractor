@@ -45,6 +45,11 @@ void MyHdbExtractorImpl::getData(std::vector<std::string> sources, const char* s
     }
 }
 
+bool MyHdbExtractorImpl::query(const char *q, Result *&result, double *elapsed)
+{
+    return mExtractor->query(q, result, elapsed);
+}
+
 void MyHdbExtractorImpl::onSourceExtractionFinished(const char *name, int totalRows, double elapsed)
 {
     printf("\"%s\" data extraction completed in %.2fs [%d rows]\n", name, elapsed, totalRows);

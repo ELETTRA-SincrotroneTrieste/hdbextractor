@@ -52,6 +52,8 @@ public:
                   int sourceIndex,
                   int totalSources, double *elapsed);
 
+    virtual bool query(const char *query, Connection *connection, Result* &result, double *elapsed = NULL);
+
     virtual bool getSourcesList(Connection *connection, std::list<std::string>& result) const;
 
     virtual bool findSource(Connection *connection, const char *substring, std::list<std::string>& result) const;

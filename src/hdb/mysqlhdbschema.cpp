@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <sys/time.h>
 #include "mysqlhdbschema.h"
+#include "../mysql/mysqlutils.h"
 #include "../db/connection.h"
 #include "../db/row.h"
 #include "../db/result.h"
@@ -67,7 +68,7 @@ int MySqlHdbSchema::get(std::vector<XVariant>& variantlist)
     {
         size = (int) d_ptr->variantList->size();
 
-      //  printf("\e[0;35mMySqlHdbSchema.get: locketh xvarlist for writing... size %d \e[0m\t", size);
+        //  printf("\e[0;35mMySqlHdbSchema.get: locketh xvarlist for writing... size %d \e[0m\t", size);
 
         for(int i = 0; i < size; i++)
         {
@@ -80,24 +81,24 @@ int MySqlHdbSchema::get(std::vector<XVariant>& variantlist)
 
     pthread_mutex_unlock(&d_ptr->mutex);
     printf("\e[0;32munlocked: [copied %d]\e[0m\n", size);
-  // The following is to test the SharedPointer for the source name */
-  //  for(int i = 0; i < size; i++)
-  //      printf("\e[1;33m source is %s (%p)\e[0m\n", variantlist.at(i).getSource(), variantlist.at(i).getSource());
+    // The following is to test the SharedPointer for the source name */
+    //  for(int i = 0; i < size; i++)
+    //      printf("\e[1;33m source is %s (%p)\e[0m\n", variantlist.at(i).getSource(), variantlist.at(i).getSource());
     return size;
 }
 
 bool MySqlHdbSchema::getData(const char *source,
-                                const TimeInterval *time_interval,
-                                Connection *connection,
-                                int notifyEveryPercent)
+                             const TimeInterval *time_interval,
+                             Connection *connection,
+                             int notifyEveryPercent)
 {
     return getData(source, time_interval->start(), time_interval->stop(), connection, notifyEveryPercent);
 }
 
 bool MySqlHdbSchema::getData(const std::vector<std::string> sources,
-                                const TimeInterval *time_interval,
-                                Connection *connection,
-                                int notifyEveryPercent)
+                             const TimeInterval *time_interval,
+                             Connection *connection,
+                             int notifyEveryPercent)
 {
     return getData(sources, time_interval->start(), time_interval->stop(), connection, notifyEveryPercent);
 }
@@ -115,13 +116,13 @@ bool MySqlHdbSchema::getData(const std::vector<std::string> sources,
  *
  */
 bool MySqlHdbSchema::getData(const char *source,
-              const char *start_date,
-              const char *stop_date,
-              Connection *connection,
-              int notifyEveryPercent,
-              int sourceIndex,
-              int totalSources,
-              double *elapsed)
+                             const char *start_date,
+                             const char *stop_date,
+                             Connection *connection,
+                             int notifyEveryPercent,
+                             int sourceIndex,
+                             int totalSources,
+                             double *elapsed)
 {
     bool success;
     int rows_from_the_past = 0;
@@ -275,9 +276,9 @@ bool MySqlHdbSchema::getData(const char *source,
                             if(fillMode != ConfigurableDbSchemaHelper::None)
                             {
                                 rows_from_the_past = fetchInThePast(source, start_date, table_name, id,
-                                                                       dataType, format, wri, connection,
-                                                                       &from_the_past_elapsed,
-                                                                       fillMode);
+                                                                    dataType, format, wri, connection,
+                                                                    &from_the_past_elapsed,
+                                                                    fillMode);
                                 if(rows_from_the_past >= 0)
                                     rowCnt += rows_from_the_past;
                             }
@@ -286,7 +287,7 @@ bool MySqlHdbSchema::getData(const char *source,
                         rowCnt++;
 
                         XVariant *xvar = NULL;
-                    //    printf("+ adding %s %s (row count %d)\n", row->getField(0), row->getField(1), res->getRowCount());
+                        //    printf("+ adding %s %s (row count %d)\n", row->getField(0), row->getField(1), res->getRowCount());
 
                         xvar = new XVariant(source, row->getField(0), row->getField(1), format, dataType, wri);
 
@@ -299,14 +300,14 @@ bool MySqlHdbSchema::getData(const char *source,
 
                         row->close();
 
-//                        printf("\e[1;33m====> every steps %d rows %d total rows %d\e[0m\n",
-//                               notifyEverySteps, rowCnt, res->getRowCount());
+                        //                        printf("\e[1;33m====> every steps %d rows %d total rows %d\e[0m\n",
+                        //                               notifyEverySteps, rowCnt, res->getRowCount());
 
                         if(notifyEverySteps > 0 && (rowCnt % notifyEverySteps == 0
-                                                             || rowCnt == res->getRowCount()) )
+                                                    || rowCnt == res->getRowCount()) )
                         {
                             d_ptr->resultListenerI->onProgressUpdate(source, (double) rowCnt / res->getRowCount() * myPercent +  myPercent * sourceIndex);
-//                            printf("\e[0;33m=====> %f\e[0m\n", (double) rowCnt / res->getRowCount() * myPercent +  myPercent * sourceIndex);
+                            //                            printf("\e[0;33m=====> %f\e[0m\n", (double) rowCnt / res->getRowCount() * myPercent +  myPercent * sourceIndex);
                         }
                     } /* res is closed at the end of else if(wri == XVariant::RW) */
 
@@ -320,7 +321,7 @@ bool MySqlHdbSchema::getData(const char *source,
                                                      " AND time <= '%s' ORDER BY time ASC", table_name, start_date, stop_date);
                     else
                         snprintf(query, MAXQUERYLEN, "SELECT time,read_value,write_value FROM %s WHERE time >='%s' "
-                                                 " AND time <= '%s' ORDER BY time ASC", table_name, start_date, stop_date);
+                                                     " AND time <= '%s' ORDER BY time ASC", table_name, start_date, stop_date);
 
                     pinfo("\e[1;4;36mHDB: query %s\e[0m\n", query);
 
@@ -354,9 +355,9 @@ bool MySqlHdbSchema::getData(const char *source,
                             if(fillMode != ConfigurableDbSchemaHelper::None)
                             {
                                 rows_from_the_past = fetchInThePast(source, start_date, table_name, id,
-                                                                       dataType, format, wri, connection,
-                                                                       &from_the_past_elapsed,
-                                                                       fillMode);
+                                                                    dataType, format, wri, connection,
+                                                                    &from_the_past_elapsed,
+                                                                    fillMode);
                                 if(rows_from_the_past >= 0)
                                     rowCnt += rows_from_the_past;
                             }
@@ -384,7 +385,7 @@ bool MySqlHdbSchema::getData(const char *source,
                         row->close();
 
                         if(notifyEverySteps > 0 && (rowCnt % notifyEverySteps == 0
-                                                             || rowCnt == res->getRowCount()) )
+                                                    || rowCnt == res->getRowCount()) )
                         {
                             double percent = round((double) rowCnt / res->getRowCount() * myPercent  + (myPercent * sourceIndex));
                             printf("\e[1;33m====> %s (RW) every steps %d rows %d total rows %d percent %f\e[0m\n",
@@ -407,9 +408,9 @@ bool MySqlHdbSchema::getData(const char *source,
                     {
 
                         rows_from_the_past = fetchInThePast(source, start_date, table_name, id,
-                                                               dataType, format, wri, connection,
-                                                               &from_the_past_elapsed,
-                                                               fillMode);
+                                                            dataType, format, wri, connection,
+                                                            &from_the_past_elapsed,
+                                                            fillMode);
                         if(rows_from_the_past >= 0)
                             rowCnt += rows_from_the_past;
                     }
@@ -444,6 +445,12 @@ bool MySqlHdbSchema::getData(const char *source,
     d_ptr->resultListenerI->onSourceExtracted(source, rowCnt, *elapsed);
 
     return !d_ptr->isCancelled && success;
+}
+
+bool MySqlHdbSchema::query(const char *query, Connection *connection,
+                           Result* &result,
+                           double *elapsed) {
+    return MySqlUtils().query(query, connection, result, d_ptr->errorMessage, elapsed);
 }
 
 /** \brief Fetch attribute data from the database between a start and stop date/time.
@@ -509,8 +516,8 @@ bool MySqlHdbSchema::getData(const std::vector<std::string> sources,
         elapsed += perSourceElapsed;
         if(!success)
             printf("\e[1;35m\t\t*\t\t* WARNING: continuing also if success is false!!!\n\t\t*\e[0m\n");
-   //     if(!success)
-   //         break;
+        //     if(!success)
+        //         break;
     }
 
     d_ptr->resultListenerI->onFinished(d_ptr->totalRowCnt, elapsed);
@@ -529,7 +536,7 @@ bool MySqlHdbSchema::getSourcesList(Connection *connection, std::list<std::strin
  *
  */
 bool MySqlHdbSchema::findErrors(const char *, const TimeInterval *,
-                        Connection *) const
+                                Connection *) const
 {
     perr("MySqlHdbSchema.findErrors: errors aren't saved into the hdb database");
     return false;
@@ -576,14 +583,14 @@ bool MySqlHdbSchema::findSource(Connection *connection, const char *substring, s
  * @return a positive number representing the number of rows extracted
  */
 int MySqlHdbSchema::fetchInThePast(const char *source,
-                                    const char *start_date, const char *table_name,
-                                    const int /* att_id */,
-                                    XVariant::DataType dataType,
-                                    XVariant::DataFormat format,
-                                    XVariant::Writable writable,
-                                    Connection *connection,
-                                    double *time_elapsed,
-                                    ConfigurableDbSchemaHelper::FillFromThePastMode mode)
+                                   const char *start_date, const char *table_name,
+                                   const int /* att_id */,
+                                   XVariant::DataType dataType,
+                                   XVariant::DataFormat format,
+                                   XVariant::Writable writable,
+                                   Connection *connection,
+                                   double *time_elapsed,
+                                   ConfigurableDbSchemaHelper::FillFromThePastMode mode)
 {
     int ret = -1;
     char query[MAXQUERYLEN];

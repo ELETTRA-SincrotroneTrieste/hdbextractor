@@ -24,8 +24,11 @@ public:
 
     virtual int next();
 
+    std::vector<std::string> getColumnList();
+
 private:
     MYSQL_RES *mResult;
+    std::vector<std::string> m_columnList;
 };
 
 #endif // MYSQLRESULT_H

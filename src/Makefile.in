@@ -158,6 +158,7 @@ am_libhdbextractor___la_OBJECTS =  \
 	db/libhdbextractor___la-timeinterval.lo \
 	db/libhdbextractor___la-datetimeutils.lo \
 	db/libhdbextractor___la-xvariantprivate.lo \
+	mysql/libhdbextractor___la-mysqlutils.lo \
 	db/libhdbextractor___la-xvariantdatainfo.lo \
 	libhdbextractor___la-sharedpointer.lo \
 	test/libhdbextractor___la-xvariantstatstest.lo
@@ -206,6 +207,7 @@ am__depfiles_remade =  \
 	mysql/$(DEPDIR)/libhdbextractor___la-mysqlconnection.Plo \
 	mysql/$(DEPDIR)/libhdbextractor___la-mysqlresult.Plo \
 	mysql/$(DEPDIR)/libhdbextractor___la-mysqlrow.Plo \
+	mysql/$(DEPDIR)/libhdbextractor___la-mysqlutils.Plo \
 	test/$(DEPDIR)/libhdbextractor___la-xvariantstatstest.Plo \
 	utils/$(DEPDIR)/libhdbextractor___la-datasiever.Plo \
 	utils/$(DEPDIR)/libhdbextractor___la-datasieverprogresslistener.Plo \
@@ -484,6 +486,8 @@ libhdbextractor___la_SOURCES = hdbextractor.cpp \
     hdbextractorprivate.h \
     hdbxmacros.h \
     mysql/mysqlconnection.h \
+    mysql/mysqlutils.h \
+    mysql/mysqlutils.cpp \
     db/connection.h \
     db/dbschema.h \
     db/row.h \
@@ -524,6 +528,7 @@ db/connection.h \
 db/row.h \
 mysql/mysqlresult.h \
 mysql/mysqlrow.h \
+mysql/mysqlutils.h \
 db/result.h \
 db/xvariant.h \
 hdb/mysqlhdbschema.h \
@@ -701,6 +706,8 @@ db/libhdbextractor___la-datetimeutils.lo: db/$(am__dirstamp) \
 	db/$(DEPDIR)/$(am__dirstamp)
 db/libhdbextractor___la-xvariantprivate.lo: db/$(am__dirstamp) \
 	db/$(DEPDIR)/$(am__dirstamp)
+mysql/libhdbextractor___la-mysqlutils.lo: mysql/$(am__dirstamp) \
+	mysql/$(DEPDIR)/$(am__dirstamp)
 db/libhdbextractor___la-xvariantdatainfo.lo: db/$(am__dirstamp) \
 	db/$(DEPDIR)/$(am__dirstamp)
 test/$(am__dirstamp):
@@ -757,6 +764,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@mysql/$(DEPDIR)/libhdbextractor___la-mysqlconnection.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mysql/$(DEPDIR)/libhdbextractor___la-mysqlresult.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@mysql/$(DEPDIR)/libhdbextractor___la-mysqlrow.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@mysql/$(DEPDIR)/libhdbextractor___la-mysqlutils.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@test/$(DEPDIR)/libhdbextractor___la-xvariantstatstest.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@utils/$(DEPDIR)/libhdbextractor___la-datasiever.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@utils/$(DEPDIR)/libhdbextractor___la-datasieverprogresslistener.Plo@am__quote@ # am--include-marker
@@ -946,6 +954,13 @@ db/libhdbextractor___la-xvariantprivate.lo: db/xvariantprivate.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='db/xvariantprivate.cpp' object='db/libhdbextractor___la-xvariantprivate.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libhdbextractor___la_CXXFLAGS) $(CXXFLAGS) -c -o db/libhdbextractor___la-xvariantprivate.lo `test -f 'db/xvariantprivate.cpp' || echo '$(srcdir)/'`db/xvariantprivate.cpp
+
+mysql/libhdbextractor___la-mysqlutils.lo: mysql/mysqlutils.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libhdbextractor___la_CXXFLAGS) $(CXXFLAGS) -MT mysql/libhdbextractor___la-mysqlutils.lo -MD -MP -MF mysql/$(DEPDIR)/libhdbextractor___la-mysqlutils.Tpo -c -o mysql/libhdbextractor___la-mysqlutils.lo `test -f 'mysql/mysqlutils.cpp' || echo '$(srcdir)/'`mysql/mysqlutils.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) mysql/$(DEPDIR)/libhdbextractor___la-mysqlutils.Tpo mysql/$(DEPDIR)/libhdbextractor___la-mysqlutils.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='mysql/mysqlutils.cpp' object='mysql/libhdbextractor___la-mysqlutils.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libhdbextractor___la_CXXFLAGS) $(CXXFLAGS) -c -o mysql/libhdbextractor___la-mysqlutils.lo `test -f 'mysql/mysqlutils.cpp' || echo '$(srcdir)/'`mysql/mysqlutils.cpp
 
 db/libhdbextractor___la-xvariantdatainfo.lo: db/xvariantdatainfo.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libhdbextractor___la_CXXFLAGS) $(CXXFLAGS) -MT db/libhdbextractor___la-xvariantdatainfo.lo -MD -MP -MF db/$(DEPDIR)/libhdbextractor___la-xvariantdatainfo.Tpo -c -o db/libhdbextractor___la-xvariantdatainfo.lo `test -f 'db/xvariantdatainfo.cpp' || echo '$(srcdir)/'`db/xvariantdatainfo.cpp
@@ -1167,6 +1182,7 @@ distclean: distclean-am
 	-rm -f mysql/$(DEPDIR)/libhdbextractor___la-mysqlconnection.Plo
 	-rm -f mysql/$(DEPDIR)/libhdbextractor___la-mysqlresult.Plo
 	-rm -f mysql/$(DEPDIR)/libhdbextractor___la-mysqlrow.Plo
+	-rm -f mysql/$(DEPDIR)/libhdbextractor___la-mysqlutils.Plo
 	-rm -f test/$(DEPDIR)/libhdbextractor___la-xvariantstatstest.Plo
 	-rm -f utils/$(DEPDIR)/libhdbextractor___la-datasiever.Plo
 	-rm -f utils/$(DEPDIR)/libhdbextractor___la-datasieverprogresslistener.Plo
@@ -1237,6 +1253,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f mysql/$(DEPDIR)/libhdbextractor___la-mysqlconnection.Plo
 	-rm -f mysql/$(DEPDIR)/libhdbextractor___la-mysqlresult.Plo
 	-rm -f mysql/$(DEPDIR)/libhdbextractor___la-mysqlrow.Plo
+	-rm -f mysql/$(DEPDIR)/libhdbextractor___la-mysqlutils.Plo
 	-rm -f test/$(DEPDIR)/libhdbextractor___la-xvariantstatstest.Plo
 	-rm -f utils/$(DEPDIR)/libhdbextractor___la-datasiever.Plo
 	-rm -f utils/$(DEPDIR)/libhdbextractor___la-datasieverprogresslistener.Plo

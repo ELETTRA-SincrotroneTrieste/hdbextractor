@@ -6,6 +6,7 @@
 #include <time.h>
 #include <math.h> /* round */
 #include <string.h> /* strerror */
+#include <stdexcept> /* std::invalid_argument */
 #include "../hdbxmacros.h"
 #include "datetimeutils.h"
 #include "xvariantprivate.h"
@@ -1448,6 +1449,27 @@ void XVariant::setError(const char *error)
     mMakeError(error);
 }
 
+/*!
+ * \brief Returns true if an error description is set, false otherwise
+ * \return true if an error description is set, false otherwise
+ *
+ * \note
+ * getError may return an error string even if hasErrorDesc returns false.
+ * In that case, the returned string will be a number which is the ID of the
+ * error description.
+ */
+bool XVariant::hasErrorDesc() const {
+    if(d->mError == nullptr)
+        return false;
+    try {
+        std::stoi(d->mError);
+        return false;
+    }
+    catch(const std::invalid_argument &a) {
+        return true;
+    }
+}
+
 /** \brief This method allows changing the timestamp of the XVariant
  *
  * @param ts the new timestamp.
@@ -1638,9 +1660,9 @@ double XVariant::toDouble(bool read, bool *ok) const
 {
     double v = nan("NaN");
     if(read && d->dataInfo->type == Double && d->dataInfo->format == Scalar && (d->dataInfo->writable == RO || d->dataInfo->writable == RW) && d->val != NULL)
-        v = *((double *)d->val);
+        v = *(static_cast<double *>(d->val));
     else if(!read && d->dataInfo->type == Double && d->dataInfo->format == Scalar && (d->dataInfo->writable == RW || d->dataInfo->writable == WO) && d->w_val != NULL)
-        v = *((double *)d->w_val);
+        v = *(static_cast<double *>(d->w_val));
     if(ok)
         *ok = d->mIsValid && (d->val != NULL || d->w_val != NULL);
     return v;
@@ -1660,9 +1682,9 @@ long int XVariant::toLongInt(bool read, bool *ok) const
 {
     long int i = LONG_MIN;
     if(read && d->dataInfo->type == Int && d->dataInfo->format == Scalar && (d->dataInfo->writable == RO || d->dataInfo->writable == RW) && d->val != NULL)
-        i = *((long int *)d->val);
+        i = *(static_cast<long int *>(d->val));
     else if(read && d->dataInfo->type == Int && d->dataInfo->format == Scalar && (d->dataInfo->writable == RO || d->dataInfo->writable == RW) && d->w_val != NULL)
-        i = *((long int *)d->w_val);
+        i = *(static_cast<long int *>(d->w_val));
     if(ok)
         *ok = d->mIsValid && (d->val != NULL || d->w_val != NULL);
     return i;
@@ -1745,7 +1767,7 @@ std::string XVariant::toString(bool read, bool *ok) const
  * On the other hand, no error message is set by this method.
  *
  */
-std::vector<std::string> XVariant::toStringVector() const
+std::vector<std::string> XVariant::toStringVector(bool read) const
 {
     std::vector<std::string> ret;
 

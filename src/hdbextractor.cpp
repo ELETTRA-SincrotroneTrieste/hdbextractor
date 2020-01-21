@@ -20,11 +20,9 @@
  */
 Hdbextractor::~Hdbextractor()
 {
-    printf("\e[1;31m~HdbExtractor: connection %p schema %p\e[0m\n", d_ptr->connection,
-           d_ptr->dbschema);
+    pdelete("HdbExtractor %p", this);
     if(d_ptr->connection != NULL)
     {
-        printf("~HdbExtractor: closing db connection\n");
         d_ptr->connection->close();
     }
     if(d_ptr->dbschema)
@@ -162,6 +160,25 @@ bool Hdbextractor::connect(DbType dbType, const char *host,
     return success;
 }
 
+bool Hdbextractor::connect()
+{
+    int port = 3306;
+    bool ok;
+    const HdbXSettings *qc = d_ptr->hdbxSettings;
+    DbType dbt;
+    std::string dbty;
+    if(qc->hasKey("dbtype"))  // db type explicitly set
+        dbty = qc->get("dbtype");
+    else if(qc->hasKey("dbname")) // try to guess from dbname
+        dbty = qc->get("dbname");
+    if(qc->hasKey("dbport") && qc->getInt("dbport", &ok) && ok)
+        port = qc->getInt("dbport", &ok);
+    (dbty == "hdb++" || dbty == "hdbpp") ? dbt = HDBPPMYSQL : dbt = HDBMYSQL;
+    return connect(dbt, qc->get("dbhost").c_str(),
+                   qc->get("dbname").c_str(), qc->get("dbuser").c_str(),
+                    qc->get("dbpass").c_str(), port);
+}
+
 void Hdbextractor::disconnect()
 {
     if(d_ptr->connection != NULL && d_ptr->connection->isConnected())
@@ -223,7 +240,6 @@ bool Hdbextractor::getData(const char *source,
 {
     bool success = false;
     strcpy(d_ptr->errorMessage, "");
-    printf("HdbExtractor.getData %s %s %s\n", source, start_date, stop_date);
     if(d_ptr->connection != NULL && d_ptr->dbschema != NULL && d_ptr->connection->isConnected())
     {
         if(d_ptr->hdbxSettings != NULL)
@@ -271,17 +287,6 @@ bool Hdbextractor::getData(const std::vector<std::string> sources,
 
         success = d_ptr->dbschema->getData(sources, start_date, stop_date,
                                            d_ptr->connection, d_ptr->updateEveryRows);
-
-//        for(size_t i = 0; i < sources.size(); i++)
-//        {
-//            printf("HdbExtractor.getData %s %s %s\n", sources.at(i).c_str(), start_date, stop_date);
-//            success = d_ptr->dbschema->getData(sources.at(i).c_str(), start_date, stop_date,
-//                                               d_ptr->connection, d_ptr->updateEveryRows, i, sources.size());
-//        //    if(!success)
-//        //        break;
-//            if(!success)
-//                printf("\e[1;31mHdbExtractor.getData: unsuccessful fetch but continue!\e[0m\n");
-//        }
     }
     /* error message, if necessary */
     if(!success && d_ptr->dbschema)
@@ -305,17 +310,48 @@ bool Hdbextractor::getData(const std::vector<std::string> sources, const TimeInt
     return getData(sources, time_interval->start(), time_interval->stop());
 }
 
+bool Hdbextractor::query(const char *query, Result *&result, double *elapsed) {
+    bool success = false;
+    strcpy(d_ptr->errorMessage, "");
+    if(d_ptr->connection != NULL && d_ptr->dbschema != NULL && d_ptr->connection->isConnected())
+    {
+        if(d_ptr->hdbxSettings != NULL)
+            d_ptr->dbschema->setHdbXSettings(d_ptr->hdbxSettings);
+        success = d_ptr->dbschema->query(query, d_ptr->connection, result, elapsed);
+    }
+    /* error message, if necessary */
+    if(!success && d_ptr->dbschema != NULL)
+        snprintf(d_ptr->errorMessage, MAXERRORLEN, "Hdbextractor.query: %s", d_ptr->dbschema->getError());
+    else if(!d_ptr->dbschema || !d_ptr->connection)
+        snprintf(d_ptr->errorMessage, MAXERRORLEN, "Hdbextractor.query: connection/schema not initialized");
+
+    return success;
+}
+
 bool Hdbextractor::getSourcesList(std::list<std::string>& result) const
 {
     bool success = false;
     strcpy(d_ptr->errorMessage, "");
-    printf("HdbExtractor.getSourcesList\n");
     if(d_ptr->connection != NULL && d_ptr->dbschema != NULL && d_ptr->connection->isConnected())
         success = d_ptr->dbschema->getSourcesList(d_ptr->connection, result);
 
     /* error message, if necessary */
     if(!success && d_ptr->dbschema)
         snprintf(d_ptr->errorMessage, MAXERRORLEN, "Hdbextractor.getSourcesList: %s", d_ptr->dbschema->getError());
+
+    return success;
+}
+
+bool Hdbextractor::findSources(const char *substring, std::list<std::string> &result) const
+{
+    bool success = false;
+    strcpy(d_ptr->errorMessage, "");
+    if(d_ptr->connection != NULL && d_ptr->dbschema != NULL && d_ptr->connection->isConnected())
+        success = d_ptr->dbschema->findSource(d_ptr->connection, substring, result);
+
+    /* error message, if necessary */
+    if(!success && d_ptr->dbschema)
+        snprintf(d_ptr->errorMessage, MAXERRORLEN, "Hdbextractor.findSources: %s", d_ptr->dbschema->getError());
 
     return success;
 }

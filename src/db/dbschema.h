@@ -4,8 +4,10 @@
 #include <vector>
 #include <list>
 #include <string>
+#include <map>
 
 class Connection;
+class Result;
 class XVariantList;
 class XVariant;
 class XErrorData;
@@ -64,6 +66,8 @@ public:
                                     const TimeInterval *time_interval,
                                     Connection *connection,
                                     int notifyEveryRows) = 0;
+
+    virtual bool query(const char *query, Connection *connection, Result* &result, double *elapsed) = 0;
 
     /** \brief This method allows getting data for the given source. The convenience parameters
      *         sourceIndex and totalSources help you getting multiple sources separately.

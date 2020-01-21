@@ -4,9 +4,11 @@
 #include "../src/hdbextractorlistener.h"
 
 class Hdbextractor;
+class Result;
 
 #include <vector>
 #include <xvariant.h>
+#include <map>
 
 /** \brief an <em>example</em> of an implementation of the HdbExtractorListener
  *
@@ -20,6 +22,8 @@ public:
     virtual ~MyHdbExtractorImpl();
 
     void getData(std::vector<std::string> sources, const char* start_date, const char *stop_date);
+
+    bool query(const char* q, Result* &result, double *elapsed);
 
     virtual void onSourceProgressUpdate(const char *name, double percent);
 

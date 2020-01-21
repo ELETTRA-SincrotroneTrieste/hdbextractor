@@ -41,6 +41,15 @@ int MySqlResult::getRowCount()
     return dRowCount;
 }
 
+std::vector<std::string> MySqlResult::getColumnList() {
+    if(m_columnList.size() > 0)
+        return m_columnList;
+    MYSQL_FIELD *field;
+    while(mResult != NULL && (field = mysql_fetch_field(mResult)))
+        m_columnList.push_back(std::string(field->name));
+    return m_columnList;
+}
+
 int MySqlResult::next()
 {
     MYSQL_ROW row;

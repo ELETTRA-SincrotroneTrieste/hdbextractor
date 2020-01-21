@@ -45,11 +45,8 @@ HdbXSettings::HdbXSettings()
 
 }
 
-HdbXSettings::~HdbXSettings()
-{
-    printf("\e[1;31mdeleting hdbxsettings START\e[0m\n");
+HdbXSettings::~HdbXSettings() {
     mMap.clear();
-    printf("\e[1;31mdeleting hdbxsettings END\e[0m\n");
 }
 
 /** \brief Load the configuration from a text file.
@@ -64,8 +61,11 @@ HdbXSettings::~HdbXSettings()
  */
 void HdbXSettings::loadFromFile(const char *filename)
 {
+    m_errorStr = std::string();
     ConfigurationParser configParser;
-    configParser.read(filename, mMap);
+    bool ok = configParser.read(filename, mMap);
+    if(!ok)
+        m_errorStr = std::string(configParser.getError());
 }
 
 /** \brief Add a property or set its value.
@@ -179,7 +179,9 @@ long int HdbXSettings::getInt(const char *key, bool *ok) const
  */
 std::string HdbXSettings::get(const char *key) const
 {
-    return mMap.at(key);
+    if(mMap.count(key) > 0)
+        return mMap.at(key);
+    return std::string();
 }
 
 /** \brief Returns the value associated to the key as a boolean.
@@ -225,7 +227,6 @@ double HdbXSettings::getDouble(const char* key, bool *ok) const
     if(val.size() > 0)
     {
         const char *c = val.c_str();
-        printf("converting \"%s\"\n", c);
         ret = strtod(c, &endptr);
         if(ok != NULL && ret == 0 && endptr == c) /* failed */
         {
@@ -236,4 +237,13 @@ double HdbXSettings::getDouble(const char* key, bool *ok) const
             *ok = true;
     }
     return ret;
+}
+
+std::string HdbXSettings::getError() const
+{
+    return m_errorStr;
+}
+
+bool HdbXSettings::hasError() const {
+    return m_errorStr.size() > 0;
 }
