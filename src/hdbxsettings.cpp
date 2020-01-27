@@ -184,6 +184,14 @@ std::string HdbXSettings::get(const char *key) const
     return std::string();
 }
 
+/*!
+ * \brief Shortcut to get the value of the *dbname* key
+ * \return the database name, as std::string, stored in the *dbname* key
+ */
+std::string HdbXSettings::dbName() const {
+    return get("dbname");
+}
+
 /** \brief Returns the value associated to the key as a boolean.
  *
  * If key is contained in the configuration, its value is evaluated as a boolean.

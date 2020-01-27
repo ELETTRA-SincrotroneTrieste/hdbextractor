@@ -2,6 +2,8 @@
 #include <string.h>
 #include <stdio.h>
 #include <math.h> /* round */
+#include <string> // stod
+#include <stdexcept> // exception from stod
 
 #define TIMESTAMPLEN    32
 
@@ -28,10 +30,19 @@ struct timeval DateTimeUtils::toTimeval(const char* timestamp_str) const
     // memset(&mtm, 0, sizeof(struct tm));
     // mtm.tm_isdst = 1;
 
-    strptime(timestamp_str, "%Y-%m-%d %H:%M:%S", mtm);
+    char *end = strptime(timestamp_str, "%Y-%m-%d %H:%M:%S", mtm);
     /* get usecs if specified */
     tv.tv_usec = 0;
     tv.tv_sec = mktime(mtm);
+    // The  return  value of the function is a pointer to the first character
+    // not processed in this function call
+    if(end != nullptr) { // catch microsecs
+        try {
+            tv.tv_usec = static_cast<suseconds_t>(std::stod(end) * 1e6);
+        }
+        catch(std::invalid_argument& ){
+        }
+    }
     return tv;
 }
 

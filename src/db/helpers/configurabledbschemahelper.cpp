@@ -38,12 +38,11 @@ ConfigurableDbSchemaHelper::FillFromThePastMode ConfigurableDbSchemaHelper::fill
         mode = KeepWindow;
     else if(hdbXSettings->get("FillFromThePastMode").compare("WidenWindow") == 0)
         mode = WidenWindow;
+    else  if(hdbXSettings->get("FillFromThePastMode").compare("None") == 0)
+        mode = None;
     else
         perr("ConfigurableDbSchemaHelper.fillFromThePastMode: unrecognized FillFromThePastMode \%s\"",
              hdbXSettings->get("FillFromThePastMode").c_str());
-
-    printf("\e[0;35mfill mode from %s is %d\e[0m\n", hdbXSettings->get("FillFromThePastMode").c_str(), mode);
-
     if(mode != None)
     {
         double windowPercent = 5;
@@ -81,21 +80,18 @@ ConfigurableDbSchemaHelper::FillFromThePastMode ConfigurableDbSchemaHelper::fill
 
         first_required_data_time_t = start_time_t + (time_t) (delta_time_t * windowPercent / 100.0);
 
-        printf("ConfigurableDbSchemaHelper.fillFromThePastMode: \e[0;7;36m t1 %s (%ld) "
-               "\nt2 %s (%ld) delta %f percent %f required %s (%ld)\n"
-               "first value at %s (%ld) ===> mode %d\e[0m\n",
-               start_date, start_time_t, stop_date, stop_time_t, delta_time_t,   windowPercent,
-              ctime(&first_required_data_time_t), first_required_data_time_t, ctime(&first_value_time_t),
-               first_value_time_t, mode);
-        printf("\e[1;33m first value date time %s\e[0m\n", ctime(&first_value_time_t));
+//        printf("ConfigurableDbSchemaHelper.fillFromThePastMode: \e[0;7;36m t1 %s (%ld) "
+//               "\nt2 %s (%ld) delta %f percent %f required %s (%ld)\n"
+//               "first value at %s (%ld) ===> mode %d\e[0m\n",
+//               start_date, start_time_t, stop_date, stop_time_t, delta_time_t,   windowPercent,
+//              ctime(&first_required_data_time_t), first_required_data_time_t, ctime(&first_value_time_t),
+//               first_value_time_t, mode);
+//        printf("\e[1;33m first value date time %s\e[0m\n", ctime(&first_value_time_t));
 
         if(first_value_time_t == 0 || first_required_data_time_t < first_value_time_t)
         {
-            printf("\e[1;32m returning mode %d\e[0m\n", mode);
             return mode;
         }
     }
-
-    printf("ConfigurableDbSchemaHelper.fillFromThePastMode: \e[0;7;36m returnin' None!\e[0m\n");
     return None;
 }

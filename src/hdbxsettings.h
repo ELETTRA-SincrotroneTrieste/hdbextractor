@@ -27,6 +27,8 @@ public:
 
     std::string get(const char *key) const;
 
+    std::string dbName() const;
+
     bool getBool(const char *key) const;
 
     double getDouble(const char* key, bool *ok) const;
