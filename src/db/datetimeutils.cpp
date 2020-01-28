@@ -23,17 +23,14 @@ struct timeval DateTimeUtils::toTimeval(const char* timestamp_str) const
 {
    // struct tm mtm;
     struct timeval tv;
-    time_t t;
-    struct tm *mtm;
-    t = time(NULL);
-    mtm = localtime(&t);
-    // memset(&mtm, 0, sizeof(struct tm));
-    // mtm.tm_isdst = 1;
+    struct tm mtm;
+    memset(&mtm, 0, sizeof(struct tm));
+    mtm.tm_isdst = -1;
 
-    char *end = strptime(timestamp_str, "%Y-%m-%d %H:%M:%S", mtm);
+    char *end = strptime(timestamp_str, "%Y-%m-%d %H:%M:%S", &mtm);
     /* get usecs if specified */
     tv.tv_usec = 0;
-    tv.tv_sec = mktime(mtm);
+    tv.tv_sec = mktime(&mtm);
     // The  return  value of the function is a pointer to the first character
     // not processed in this function call
     if(end != nullptr) { // catch microsecs

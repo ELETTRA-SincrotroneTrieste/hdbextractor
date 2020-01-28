@@ -914,7 +914,7 @@ int MySqlHdbppSchema::fetchInThePast(const char *source,
         snprintf(query, MAXQUERYLEN, "SELECT data_time,dim_x_r,idx,value_r, %s quality,att_error_desc_id FROM "
                                      " %s WHERE att_conf_id=%d AND data_time = "
                                      " '%s' ORDER BY idx ASC",
-                 column_value_w, table_name, att_id, start_date);
+                 column_value_w, table_name, att_id, timestamp);
     }
     else if(writable == XVariant::RW)
     {
