@@ -1,9 +1,0 @@
-src
-src/db
-src/db/helpers
-src/hdb
-src/hdbpp
-src/mysql
-src/test
-src/utils
-src/utils/private
