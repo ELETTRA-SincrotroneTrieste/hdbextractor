@@ -1,22 +1,23 @@
+#include "mysqlhdbschema.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/time.h>
-#include "mysqlhdbschema.h"
-#include "../mysql/mysqlutils.h"
-#include "../db/connection.h"
-#include "../db/row.h"
-#include "../db/result.h"
-#include "../mysql/mysqlconnection.h"
-#include "../hdbxmacros.h"
-#include "../db/dbschemaprivate.h"
-#include "../db/xvariantlist.h"
-#include "../db/timeinterval.h"
-#include "../sharedpointer.h"
+#include <connection.h>
+#include <row.h>
+#include <result.h>
+#include <mysqlconnection.h>
+#include <mysqlutils.h>
+#include <dbmacros.h>
+#include <dbschemaprivate.h>
+#include <configurabledbschemahelper.h>
+#include <xvariantlist.h>
+#include <timeinterval.h>
+#include <dbsettings.h>
 #include <assert.h>
 #include <map>
 #include <math.h>
-#include "../hdbxsettings.h"
+
 
 #define MAXQUERYLEN 4096
 #define MAXTABLENAMELEN 32

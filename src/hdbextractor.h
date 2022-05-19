@@ -11,7 +11,7 @@
 
 class HdbExtractorPrivate;
 class HdbExtractorListener;
-class HdbXSettings;
+class DbSettings;
 class TimeInterval;
 class Result;
 
@@ -625,7 +625,7 @@ public:
 
     bool findErrors(const char *source, const TimeInterval *time_interval) const;
 
-    void setHdbXSettings(HdbXSettings *qc);
+    void setHdbXSettings(DbSettings *qc);
 
     /** \brief Get a copy of the partial or complete data fetched from the database up to this moment
      *
@@ -651,7 +651,7 @@ public:
 
     bool hasError() const;
 
-    HdbXSettings *getHdbXSettings() const;
+    DbSettings *getHdbXSettings() const;
 
     void cancelExtraction();
 

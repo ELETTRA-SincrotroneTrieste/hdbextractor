@@ -1,13 +1,13 @@
 #include "hdbextractor.h"
 #include "hdbextractorprivate.h"
-#include "mysql/mysqlconnection.h"
-#include "result.h"
-#include "hdbxmacros.h"
+#include <mysqlconnection.h>
+#include <result.h>
+#include <dbmacros.h>
 #include "hdb/mysqlhdbschema.h"
 #include "hdbpp/mysqlhdbppschema.h"
 #include "hdbextractorlistener.h"
-#include "hdbxsettings.h"
-#include "timeinterval.h"
+#include <dbsettings.h>
+#include <timeinterval.h>
 
 #include <string.h>
 
@@ -118,7 +118,7 @@ Hdbextractor::Hdbextractor(HdbExtractorListener *hdbxlistener) : ResultListener(
     d_ptr->dbschema = NULL;
     d_ptr->dbType = DBUNDEFINED;
     d_ptr->hdbXListenerI = hdbxlistener;
-    d_ptr->hdbxSettings = NULL;
+    d_ptr->dbsettings = NULL;
     /* by default, trigger data available on listener only when data fetch is complete */
     d_ptr->updateEveryRows = -1;
 }
@@ -164,7 +164,7 @@ bool Hdbextractor::connect()
 {
     int port = 3306;
     bool ok;
-    const HdbXSettings *qc = d_ptr->hdbxSettings;
+    const DbSettings *qc = d_ptr->dbsettings;
     DbType dbt;
     std::string dbty;
     if(qc->hasKey("dbtype"))  // db type explicitly set
@@ -242,8 +242,8 @@ bool Hdbextractor::getData(const char *source,
     strcpy(d_ptr->errorMessage, "");
     if(d_ptr->connection != NULL && d_ptr->dbschema != NULL && d_ptr->connection->isConnected())
     {
-        if(d_ptr->hdbxSettings != NULL)
-            d_ptr->dbschema->setHdbXSettings(d_ptr->hdbxSettings);
+        if(d_ptr->dbsettings != NULL)
+            d_ptr->dbschema->setHdbXSettings(d_ptr->dbsettings);
         success = d_ptr->dbschema->getData(source, start_date, stop_date,
                                            d_ptr->connection, d_ptr->updateEveryRows);
     }
@@ -271,7 +271,7 @@ bool Hdbextractor::getData(const char *source,
  * when no data is available between start_date and stop_date.
  *
  * @see getErrorMessage
- * @see setHdbXSettings
+ * @see  setHdbXSettings
  */
 bool Hdbextractor::getData(const std::vector<std::string> sources,
                            const char *start_date,
@@ -282,8 +282,8 @@ bool Hdbextractor::getData(const std::vector<std::string> sources,
 
     if(d_ptr->connection != NULL && d_ptr->dbschema != NULL && d_ptr->connection->isConnected())
     {
-        if(d_ptr->hdbxSettings != NULL)
-            d_ptr->dbschema->setHdbXSettings(d_ptr->hdbxSettings);
+        if(d_ptr->dbsettings != NULL)
+            d_ptr->dbschema->setHdbXSettings(d_ptr->dbsettings);
 
         success = d_ptr->dbschema->getData(sources, start_date, stop_date,
                                            d_ptr->connection, d_ptr->updateEveryRows);
@@ -315,8 +315,8 @@ bool Hdbextractor::query(const char *query, Result *&result, double *elapsed) {
     strcpy(d_ptr->errorMessage, "");
     if(d_ptr->connection != NULL && d_ptr->dbschema != NULL && d_ptr->connection->isConnected())
     {
-        if(d_ptr->hdbxSettings != NULL)
-            d_ptr->dbschema->setHdbXSettings(d_ptr->hdbxSettings);
+        if(d_ptr->dbsettings != NULL)
+            d_ptr->dbschema->setHdbXSettings(d_ptr->dbsettings);
         success = d_ptr->dbschema->query(query, d_ptr->connection, result, elapsed);
     }
     /* error message, if necessary */
@@ -410,9 +410,9 @@ int Hdbextractor::updateProgressPercent()
  *
  * @see setHdbXSettings
  */
-HdbXSettings *Hdbextractor::getHdbXSettings() const
+DbSettings *Hdbextractor::getHdbXSettings() const
 {
-    return d_ptr->hdbxSettings;
+    return d_ptr->dbsettings;
 }
 
 void Hdbextractor::cancelExtraction()
@@ -442,14 +442,14 @@ bool Hdbextractor::extractionIsCancelled() const
  * @see HdbXSettings
  * @see getData
  */
-void Hdbextractor::setHdbXSettings(HdbXSettings *qc)
+void Hdbextractor::setHdbXSettings(DbSettings *qc)
 {
-    if(d_ptr->hdbxSettings) /* delete current configuration */
+    if(d_ptr->dbsettings) /* delete current configuration */
     {
         printf("\e[1;31mDELETING hdbXSettings in hdbextractor\e[0m\n");
-        delete d_ptr->hdbxSettings;
+        delete d_ptr->dbsettings;
     }
-    d_ptr->hdbxSettings = qc;
+    d_ptr->dbsettings = qc;
 }
 
 /** \brief set the percentage of rows processed over total after that

@@ -1,5 +1,5 @@
-project('hdbextractor', 'cpp', version : '1.0.0',
-    default_options : ['c_std=c11', 'cpp_std=c++11'])
+project('hdbextractor', 'cpp', version : '2.0.0',
+    default_options : ['c_std=c17', 'cpp_std=c++17'])
 
 project_description = 'extract data from hdb and hdb++ historical databases'
 
@@ -18,92 +18,41 @@ configure_file(output : 'config.h',
 
 
 headers = [
-	'src/lib/cumbia.h',
-	'src/lib/cumacros.h',
-'src/lib/cucontinuousactivity.h',
-'src/lib/cuisolatedactivity.h',
-'src/lib/cuactivity.h',
-'src/lib/cuactivityevent.h',
-'src/lib/threads/cuthreadinterface.h',
-'src/lib/threads/cuthreadlistener.h',
-'src/lib/threads/cutimer.h',
-'src/lib/threads/cutimerlistener.h',
-'src/lib/cuvariant.h',
-'src/lib/cuvariant_t.h',
-'src/lib/cuvariantprivate.h',
-'src/lib/cudata.h',
-'src/lib/cudataquality.h',
-'src/lib/cumbiapool.h',
-'src/lib/cudatalistener.h',
-'src/lib/services/cuservices.h',
-'src/lib/services/cuserviceprovider.h',
-'src/lib/services/cuthreadservice.h',
-'src/lib/services/cuservicei.h',
-'src/lib/services/cutimerservice.h',
-'src/lib/services/culog.h',
-'src/lib/threads/cuthreadevents.h',
-'src/lib/threads/cuthreadfactoryimpl_i.h',
-'src/lib/threads/cuthreadfactoryimpl.h',
-'src/lib/threads/cuthread.h',
-'src/lib/threads/cueventloop.h',
-'src/lib/services/cuactivitymanager.h',
-'src/lib/threads/cuevent.h',
-'src/lib/threads/cuthreadseventbridge_i.h',
-'src/lib/threads/cuthreadseventbridge.h',
-'src/lib/threads/cuthreadseventbridgefactory_i.h' ,
-'src/lib/threads/cuthreadtokengeni.h'
+'src/hdbextractor.h',
+'src/hdbextractorlistener.h',
+'src/hdbpp/mysqlhdbppschema.h',
+'src/hdb/mysqlhdbschema.h',
+'src/hdbextractorprivate.h',
+'src/utils/datasieverprogresslistener.h',
+'src/utils/datasiever.h',
+'src/utils/private/datasieverprivate.h',
 ]
 
-install_headers(headers, subdir : 'cumbia') # -> include/cumbia/
+install_headers(headers, subdir : 'hdbextractor') # -> include/hdbextractor/
 
 sources = [
-'src/lib/cumbia.cpp',
-'src/lib/cumbiapool.cpp',
-'src/lib/cucontinuousactivity.cpp',
-'src/lib/cuisolatedactivity.cpp',
-'src/lib/cumacros.h',
-'src/lib/cuactivity.cpp',
-'src/lib/cuactivityevent.cpp',
-'src/lib/threads/cutimer.cpp',
-'src/lib/cuvariant.cpp',
-'src/lib/cuvariantprivate.cpp',
-'src/lib/cudata.cpp',
-'src/lib/cudataquality.cpp',
-'src/lib/cudatalistener.cpp',
-'src/lib/services/cuthreadservice.cpp',
-'src/lib/services/cutimerservice.cpp',
-'src/lib/services/cuserviceprovider.cpp',
-'src/lib/services/culog.cpp',
-'src/lib/threads/cuthreadevents.cpp',
-'src/lib/threads/cuthreadfactoryimpl.cpp',
-'src/lib/threads/cuthread.cpp',
-'src/lib/threads/cueventloop.cpp',
-'src/lib/services/cuactivitymanager.cpp',
-'src/lib/threads/cuevent.cpp',
-'src/lib/threads/cuthreadseventbridge.cpp'
-
+'src/hdbextractor.cpp',
+'src/hdbpp/mysqlhdbppschema.cpp',
+'src/hdb/mysqlhdbschema.cpp',
+'src/utils/datasieverprogresslistener.cpp',
+'src/utils/private/datasieverprivate.cpp',
+'src/utils/datasiever.cpp'
 ]
 
-includedirs = include_directories('src/lib', 'src/lib/threads', 'src/lib/services')
+includedirs = include_directories('src/hdb', 'src/hdbpp', 'src/utils', 'src/utils/private')
 
-cpp_arguments = '-DCUMBIA_DEBUG_OUTPUT=1'
+cpp_arguments = '-DELETTRA_EU_LIBSQLDB_PRINTINFO=1'
 
 # cpp_arguments = []
 
-deps = [ dependency('threads') ]
+deps = [ dependency('libsqldb') ]
 
-cumbialib = shared_library('cumbia', sources,
+hdbextractorlib = shared_library('hdbextractor++', sources,
         version : meson.project_version(),
         include_directories : includedirs,
         cpp_args : cpp_arguments,
         dependencies : deps ,
         install : true)
-
-pkg = import('pkgconfig')
-pkg.generate(version : meson.project_version(),
-    name : 'libcumbia',
-    filebase : 'cumbia',
-    description : project_description)
 
 ### ====================================== pkg config   ============================
 pkgconfig = find_program('pkg-config', required: false)
@@ -113,13 +62,13 @@ endif
 
 pkgg = import('pkgconfig')
 
-h = ['cumbia']  # subdirectories of ${prefix}/${includedir} to add to header path
+h = ['hdbextractor']  # subdirectories of ${prefix}/${includedir} to add to header path
 pkgg.generate(
-    libraries : cumbialib,
+    libraries : hdbextractorlib,
     subdirs : h,
     version : meson.project_version(),
-    name : 'libcumbia',
-    filebase : 'cumbia',
+    name : 'libhdbextractor++',
+    filebase : 'hdbextractor++',
     description : project_description )
 
 
@@ -142,5 +91,7 @@ else
   doxydata.set('HAVE_DOT', 'NO')
 endif
 
-subdir('doc')
+message ('doc generation disabled')
+message('uncomment the subdir doc line in meson.build')
+# subdir('doc')
 

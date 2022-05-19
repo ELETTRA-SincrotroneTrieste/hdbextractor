@@ -5,7 +5,7 @@
 #include <string.h>
 #include <set>
 #include <time.h>
-#include <hdbxmacros.h>
+#include <dbmacros.h>
 
 #define MAXSRCLEN 256
 

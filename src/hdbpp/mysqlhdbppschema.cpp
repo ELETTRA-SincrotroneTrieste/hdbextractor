@@ -4,23 +4,23 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/time.h>
-#include "../db/connection.h"
-#include "../db/row.h"
-#include "../db/result.h"
-#include "../mysql/mysqlconnection.h"
-#include "../mysql/mysqlutils.h"
-#include "../hdbxmacros.h"
-#include "../db/dbschemaprivate.h"
-#include "../db/helpers/configurabledbschemahelper.h"
-#include "../db/xvariantlist.h"
-#include "../db/timeinterval.h"
-#include "../hdbxsettings.h"
+#include <connection.h>
+#include <row.h>
+#include <result.h>
+#include <mysqlconnection.h>
+#include <mysqlutils.h>
+#include <dbmacros.h>
+#include <dbschemaprivate.h>
+#include <configurabledbschemahelper.h>
+#include <xvariantlist.h>
+#include <timeinterval.h>
+#include <dbsettings.h>
 #include <assert.h>
 #include <map>
 #include <math.h>
 
 #define MAXQUERYLEN 4096
-#define MAXTABLENAMELEN 32
+#define MAXTABLENAMELEN 64
 #define MAXTIMESTAMPLEN 64
 
 MySqlHdbppSchema::MySqlHdbppSchema(ResultListener *resultListenerI) : ConfigurableDbSchema()

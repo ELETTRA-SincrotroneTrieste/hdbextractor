@@ -8,13 +8,11 @@
 class Connection;
 class ConfigurableDbSchema;
 class HdbExtractorListener;
-class HdbXSettings;
+class DbSettings;
 
 class HdbExtractorPrivate
 {
 public:
-    HdbExtractorPrivate();
-
     Hdbextractor::DbType dbType;
 
     Connection * connection;
@@ -23,7 +21,7 @@ public:
 
     HdbExtractorListener* hdbXListenerI;
 
-    HdbXSettings *hdbxSettings;
+    DbSettings *dbsettings;
 
     int updateEveryRows;
 

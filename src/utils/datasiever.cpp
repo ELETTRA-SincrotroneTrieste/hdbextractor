@@ -1,11 +1,11 @@
 #include "datasiever.h"
 #include "datasieverprivate.h"
-#include "xvariantprinter.h"
+#include <xvariantprinter.h>
 
 #include <string.h>
 #include <set>
 #include <sys/time.h>
-#include "../hdbxmacros.h"
+#include <dbmacros.h>
 #include <unistd.h>
 
 #define MAXSRCLEN 256
