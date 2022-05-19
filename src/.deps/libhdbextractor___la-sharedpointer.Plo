@@ -1,6 +1,0 @@
-libhdbextractor___la-sharedpointer.lo: sharedpointer.cpp \
- /usr/include/stdc-predef.h sharedpointer.h
-
-/usr/include/stdc-predef.h:
-
-sharedpointer.h:
