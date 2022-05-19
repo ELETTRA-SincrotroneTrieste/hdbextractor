@@ -80,7 +80,6 @@ int MySqlHdbSchema::get(std::vector<XVariant>& variantlist)
     }
 
     pthread_mutex_unlock(&d_ptr->mutex);
-    printf("\e[0;32munlocked: [copied %d]\e[0m\n", size);
     // The following is to test the SharedPointer for the source name */
     //  for(int i = 0; i < size; i++)
     //      printf("\e[1;33m source is %s (%p)\e[0m\n", variantlist.at(i).getSource(), variantlist.at(i).getSource());
@@ -254,9 +253,6 @@ bool MySqlHdbSchema::getData(const char *source,
                     }
 
                     notifyEverySteps = round(res->getRowCount() / d_ptr->notifyEveryPercent * totalSources);
-
-                    printf("\e[1;32m notifying every rows %d row cound %d is canceled %d\e[0m\n",
-                           notifyEveryPercent, res->getRowCount(), d_ptr->isCancelled);
                     while(!d_ptr->isCancelled && res->next() > 0)
                     {
                         d_ptr->totalRowCnt++;

@@ -1,0 +1,5 @@
+utils/libhdbextractor___la-datasieverprogresslistener.lo: \
+ utils/datasieverprogresslistener.cpp /usr/include/stdc-predef.h \
+ utils/datasieverprogresslistener.h
+/usr/include/stdc-predef.h:
+utils/datasieverprogresslistener.h:
