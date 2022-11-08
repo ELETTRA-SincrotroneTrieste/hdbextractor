@@ -59,6 +59,13 @@ before attempting to use the library
 
 ## Building the hdbxtest example (simple command line client)
 
+A simple command line client for testing purposes is available under the *hdbxtest* subdirectory
+of the project.
+You may prefer to use the much more versatile *cumbia read* command line utility instead.
+Please refer to the [cumbia-libs](https://github.com/ELETTRA-SincrotroneTrieste/cumbia-libs)
+and the [cumbia-historicaldb](https://github.com/ELETTRA-SincrotroneTrieste/cumbia-historicaldb)
+project pages.
+
 Change into the *hdbxtest* directory:
 
 > cd hdbextractor/hdbxtest
@@ -154,4 +161,12 @@ Execute the python console
 ['BoolVector', 'ConfigurationParser', 'Connection', 'DataSiever', 'DataSieverProgressListener', 'DateTimeUtils', 'DbSettings', 'DoubleVector', 'HdbExtractorListener', 'Hdbextractor', 'IntVector', 'LongIntVector', 'MAXERRORLEN', 'MAXTIMESTAMPLEN', 'MySqlConnection', 'Result', 'ResultListener', 'SRCLEN', 'StringStringMap', 'StringVector', 'SwigPyIterator', 'TIMESTAMPLEN', 'TimeInterval', 'ULongIntVector', 'XVariant', 'XVariantDataInfo', 'XVariantList', 'XVariantPrinter', 'XVariantVector', '_SwigNonDynamicMeta', '__builtin__', '__builtins__', '__cached__', '__doc__', '__file__', '__loader__', '__name__', '__package__', '__spec__', '_hdbextractor', '_swig_add_metaclass', '_swig_python_version_info', '_swig_repr', '_swig_setattr_nondynamic_class_variable', '_swig_setattr_nondynamic_instance_variable', 'weakref']
 ```
 
+
+## See also
+
+- The [cumbia-libs](https://github.com/ELETTRA-SincrotroneTrieste/cumbia-libs)
+- The [cumbia-historicaldb](https://github.com/ELETTRA-SincrotroneTrieste/cumbia-historicaldb) 
+
+We suggest using *cumbia read* as a command line tool to get data from the historical database.
+A *Qt* module and extension are available under [cumbia-historicaldb](https://github.com/ELETTRA-SincrotroneTrieste/cumbia-historicaldb).
 
