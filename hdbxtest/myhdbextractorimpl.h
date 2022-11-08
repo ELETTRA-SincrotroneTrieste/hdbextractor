@@ -1,7 +1,7 @@
 #ifndef MYHDBEXTRACTORIMPL_H
 #define MYHDBEXTRACTORIMPL_H
 
-#include "../src/hdbextractorlistener.h"
+#include <hdbextractorlistener.h>
 
 class Hdbextractor;
 class Result;

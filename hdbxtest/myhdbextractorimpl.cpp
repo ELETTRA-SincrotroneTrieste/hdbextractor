@@ -1,8 +1,8 @@
 #include "myhdbextractorimpl.h"
 #include <stdio.h>
 #include <string.h>
-#include "../src/hdbextractor.h"
-#include "../src/db/xvariant.h"
+#include <hdbextractor.h>
+#include <xvariant.h>
 
 MyHdbExtractorImpl::MyHdbExtractorImpl(const char *dbuser, const char *dbpass,
                                        const char *dbhost, const char *dbnam)

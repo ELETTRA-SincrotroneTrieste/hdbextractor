@@ -57,6 +57,46 @@ Please make sure that the *LD_LIBRARY_PATH* environment variable contains both
 */usr/local/hdbextractor/lib* and */usr/local/elettra.eu.libsqldb/lib* (for example)
 before attempting to use the library
 
+## Building the hdbxtest example (simple command line client)
+
+Change into the *hdbxtest* directory:
+
+> cd hdbextractor/hdbxtest
+
+Make sure that the 
+
+- *elettra.eu.libsqldb* *{prefix}/lib/pkgconfig* and
+- *hdbextractor* *{prefix}/lib/pkgconfig*
+
+are both listed in the *PKG_CONFIG_PATH* environment variable:
+
+> export PKG_CONFIG_PATH=/usr/local/elettra.eu.libsqldb/lib/pkgconfig:/usr/local/hdbextractor/lib/pkgconfig:$PKG_CONFIG_PATH
+
+Configure the *meson build directory*:
+
+> meson builddir
+
+> cd builddir
+
+> ninja 
+
+Optionally, the hdb test command line client can be installed:
+
+> meson configure -Dprefix=/usr/local/hdbextractor
+
+> ninja install
+
+The output will show something like this, according to your choices:
+
+```
+Installing hdbxtest to /usr/local/hdbextractor/bin
+```
+
+Before running the test example, make sure that *LD_LIBRARY_PATH* contains the *lib* directories
+of both the *elettra.eu.libsqldb* and *hdbextractor* installation paths:
+
+> export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/hdbextractor/lib:/usr/local/elettra.eu/libsqldb/lib
+
 ## Building the Python extension (wrapper)
 
 ### Prerequisites

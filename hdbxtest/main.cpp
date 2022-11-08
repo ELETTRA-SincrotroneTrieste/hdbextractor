@@ -1,19 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../src/utils/datasiever.h"
+#include <datasiever.h>
 #include "myhdbextractorimpl.h"
-#include "hdbxsettings.h"
-#include "../src/hdbextractor.h"
-#include "../src/configurationparser.h"
-#include "../src/utils/xvariantprinter.h"
-#include "../src/db/result.h"
+#include "dbsettings.h"
+#include <hdbextractor.h>
+#include <configurationparser.h>
+#include <xvariantprinter.h>
+#include <result.h>
 #include <map>
 
 using namespace std;
 
 void print_usage(const char *appnam) {
-    printf("\e[1;31mUsage\e[0m \"%s configfile.dat domain/family/member/attribute \"2014-07-20 10:00:00\" \"2014-07-20 12:00:00\""
+    printf("\033[1;31mUsage\033[0m \"%s configfile.dat domain/family/member/attribute \"2014-07-20 10:00:00\" \"2014-07-20 12:00:00\""
            "\n or \"%s configfile.dat --query \"SELECT ...\" \"\n",
            appnam, appnam);
 }
@@ -26,7 +26,7 @@ void print_results(Result *res) {
         ++r;
         Row *row = res->getCurrentRow();
         for(int i = 0; row != NULL && i < row->getFieldCount(); i++) {
-            printf("%d. %s\t\e[1;32m%s\e[0m\n", r+1, cols[i].c_str(), row->getField(i));
+            printf("%d. %s\t\033[1;32m%s\033[0m\n", r+1, cols[i].c_str(), row->getField(i));
         }
     }
 }
@@ -35,7 +35,7 @@ int main(int argc, char **argv)
 {
     if(argc == 4) {
         if(strcmp(argv[2], "--query") == 0 || strcmp(argv[3], "-q") == 0) {
-            HdbXSettings *qc = new HdbXSettings();
+            DbSettings *qc = new DbSettings();
             qc->loadFromFile(argv[1]);
 
             MyHdbExtractorImpl *hdbxi = new MyHdbExtractorImpl(qc->get("dbuser").c_str(),
@@ -46,7 +46,7 @@ int main(int argc, char **argv)
             Result* result = NULL;
             bool res = hdbxi->query(argv[3], result, &elapsed);
             if(!res) {
-                printf("\e[1;31merror\e[0m: query \"%s\" failed: \"%s\"\n\n", argv[3],
+                printf("\033[1;31merror\033[0m: query \"%s\" failed: \"%s\"\n\n", argv[3],
                         hdbxi->getHdbExtractor()->getErrorMessage());
             }
             else
@@ -70,7 +70,7 @@ int main(int argc, char **argv)
         for(int i = 2; i < argc - 2; i++)
             sources.push_back(std::string(argv[i]));
 
-        HdbXSettings *qc = new HdbXSettings();
+        DbSettings *qc = new DbSettings();
         qc->loadFromFile(argv[1]);
 
         MyHdbExtractorImpl *hdbxi = new MyHdbExtractorImpl(qc->get("dbuser").c_str(),
@@ -92,7 +92,7 @@ int main(int argc, char **argv)
         }
 
 
-        printf("main.cpp: deleting hdbxsettings\n");
+        printf("main.cpp: deleting DbSettings\n");
         delete qc;
         printf("main.cpp: deleting MyHdbExtractorImpl\n");
         delete hdbxi;
