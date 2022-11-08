@@ -51,7 +51,7 @@ This will install the shared library, the include files (under the *include/hdbe
 if not specified otherwise) and the *pkgconfig* file for third party libraries or programs 
 (under *lib/pkgconfig*)
 
-### LD_LIBRARY_PATH adjustment
+#### LD_LIBRARY_PATH adjustment
 
 Please make sure that the *LD_LIBRARY_PATH* environment variable contains both
 */usr/local/hdbextractor/lib* and */usr/local/elettra.eu.libsqldb/lib* (for example)
