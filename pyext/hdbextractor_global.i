@@ -22,7 +22,7 @@ namespace std {
 }
 
 %include datasieverprogresslistener.i 
-%include hdbxsettings.i 
+%include dbsettings.i 
 %include result.i
 %include resultlistenerinterface.i 
 %include xvariantdatainfo.i 

@@ -91,7 +91,5 @@ else
   doxydata.set('HAVE_DOT', 'NO')
 endif
 
-message ('doc generation disabled')
-message('uncomment the subdir doc line in meson.build')
 # subdir('doc')
 
