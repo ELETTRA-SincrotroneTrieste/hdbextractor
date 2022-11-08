@@ -167,6 +167,6 @@ Execute the python console
 - The [cumbia-libs](https://github.com/ELETTRA-SincrotroneTrieste/cumbia-libs)
 - The [cumbia-historicaldb](https://github.com/ELETTRA-SincrotroneTrieste/cumbia-historicaldb) 
 
-We suggest using *cumbia read* as a command line tool to get data from the historical database.
-A *Qt* module and extension are available under [cumbia-historicaldb](https://github.com/ELETTRA-SincrotroneTrieste/cumbia-historicaldb).
-
+We suggest using *cumbia read* as a command line tool to fetch data from the historical database.
+Additionally, a *Qt* module and plugin are available under [cumbia-historicaldb](https://github.com/ELETTRA-SincrotroneTrieste/cumbia-historicaldb).
+A *historical database explorer* written in Qt and some examples are available therein.
