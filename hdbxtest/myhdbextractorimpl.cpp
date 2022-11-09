@@ -4,26 +4,28 @@
 #include <hdbextractor.h>
 #include <xvariant.h>
 
-MyHdbExtractorImpl::MyHdbExtractorImpl(const char *dbuser, const char *dbpass,
-                                       const char *dbhost, const char *dbnam)
+MyHdbExtractorImpl::MyHdbExtractorImpl(const char *dbuser,
+                                       const char *dbpass,
+                                       const char *dbhost,
+                                       const char *dbnam, Schema schema)
 {
     printf("\033[0;37mtrying to connect to host: \"%s\" db name: \"%s\" user: \"%s\"\033[0m\t", dbhost, dbnam, dbuser);
 
     mExtractor = new Hdbextractor(this);
-    Hdbextractor::DbType type = Hdbextractor::HDBMYSQL;
-    if(strcmp(dbnam, "hdb") == 0)
+    Hdbextractor::DbType type = Hdbextractor::HDBPPMYSQL;
+    if(schema == Schema::Hdb)
         type = Hdbextractor::HDBMYSQL;
-    else if(strcmp(dbnam, "hdbpp") == 0)
+    else if(schema == Schema::Hdbpp)
         type = Hdbextractor::HDBPPMYSQL;
 
     bool res = mExtractor->connect(type, dbhost, dbnam, dbuser, dbpass);
     if(res)
     {
-        printf("\e[1;32mOK\e[0m\n");
+        printf("\033[1;32mOK\033[0m\n");
         mExtractor->setUpdateProgressPercent(10);
     }
     else {
-        printf("\e[1;31merror connecting to host: %s\e[0m\n", dbhost);
+        printf("\033[1;31merror connecting to host: %s\033[0m\n", dbhost);
     }
 
 }
@@ -41,7 +43,7 @@ void MyHdbExtractorImpl::getData(std::vector<std::string> sources, const char* s
     if(!res)
     {
         for(size_t i = 0; i < sources.size(); i++)
-            printf("\e[1;31merror fetching data: %s: %s\e[0m\n", sources[i].c_str(), mExtractor->getErrorMessage());
+            printf("\033[1;31merror fetching data: %s: %s\033[0m\n", sources[i].c_str(), mExtractor->getErrorMessage());
     }
 }
 

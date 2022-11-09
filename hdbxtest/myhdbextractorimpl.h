@@ -16,8 +16,11 @@ class Result;
 class MyHdbExtractorImpl : public HdbExtractorListener
 {
 public:
+    enum Schema { Auto, Hdbpp, Hdb };
+
     MyHdbExtractorImpl(const char *dbuser, const char *dbpass,
-                       const char *dbhost, const char *dbnam);
+                       const char *dbhost, const char *dbnam,
+                       Schema schema = Hdbpp);
 
     virtual ~MyHdbExtractorImpl();
 

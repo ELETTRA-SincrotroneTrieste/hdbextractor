@@ -11,6 +11,8 @@ dbpass =hdbbrowser
 dbhost = fcsproxy
 dbname=hdb
 
+dbschema=hdb
+
 
 # The FillFromThePastMode configures how the lack of data in the desired time window is managed.
 # # Possible values (if not specified, the default is None):

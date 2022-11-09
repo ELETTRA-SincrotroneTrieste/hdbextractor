@@ -37,9 +37,15 @@ int main(int argc, char **argv)
         if(strcmp(argv[2], "--query") == 0 || strcmp(argv[3], "-q") == 0) {
             DbSettings *qc = new DbSettings();
             qc->loadFromFile(argv[1]);
+            // configuration file contains dbschema: use it. Default: hdb++
+            MyHdbExtractorImpl::Schema schema = qc->get("dbschema") == "hdb" ?
+                        MyHdbExtractorImpl::Hdb : MyHdbExtractorImpl::Hdbpp;
 
             MyHdbExtractorImpl *hdbxi = new MyHdbExtractorImpl(qc->get("dbuser").c_str(),
-                                                               qc->get("dbpass").c_str(), qc->get("dbhost").c_str(), qc->get("dbname").c_str());
+                                                               qc->get("dbpass").c_str(),
+                                                               qc->get("dbhost").c_str(),
+                                                               qc->get("dbname").c_str(),
+                                                               schema);
 
             hdbxi->getHdbExtractor()->setHdbXSettings(qc);
             double elapsed;
@@ -74,7 +80,9 @@ int main(int argc, char **argv)
         qc->loadFromFile(argv[1]);
 
         MyHdbExtractorImpl *hdbxi = new MyHdbExtractorImpl(qc->get("dbuser").c_str(),
-                                                           qc->get("dbpass").c_str(), qc->get("dbhost").c_str(), qc->get("dbname").c_str());
+                                                           qc->get("dbpass").c_str(),
+                                                           qc->get("dbhost").c_str(),
+                                                           qc->get("dbname").c_str());
 
         hdbxi->getHdbExtractor()->setHdbXSettings(qc);
         hdbxi->getData(sources, start_date, stop_date);
