@@ -7,8 +7,8 @@
 
 dbuser  = hdbppro
 	
-dbpass = hdbppro
-dbhost = srv-log-srf-02
+dbpass = hdbppro_password
+dbhost = srv-db-replica-02
 dbname	= hdbpp
 
 dbschema = hdbpp

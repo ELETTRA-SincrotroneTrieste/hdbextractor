@@ -651,7 +651,6 @@ bool MySqlHdbppSchema::getData(const std::vector<std::string> sources,
             break;
     }
     d_ptr->resultListenerI->onFinished(d_ptr->totalRowCnt, elapsed);
-
     return success;
 }
 

@@ -99,10 +99,7 @@ int main(int argc, char **argv)
             XVariantPrinter().printValueList(values, 2);
         }
 
-
-        printf("main.cpp: deleting DbSettings\n");
         delete qc;
-        printf("main.cpp: deleting MyHdbExtractorImpl\n");
         delete hdbxi;
     }
     return 0;
