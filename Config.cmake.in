@@ -1,0 +1,9 @@
+# Config.cmake.in
+
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/hdbextractorTargets.cmake")
+
+# Capturing values from configure (optional)
+# set(my-config-var @my-config-var@)
+
